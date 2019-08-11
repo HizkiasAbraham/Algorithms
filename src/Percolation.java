@@ -4,21 +4,21 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
     // Weighted quick union find
     WeightedQuickUnionUF weightedUF;
-
     // Sites
     private int[][] sites;
-
     // open or closed site track
     private boolean[][] openOrBlocked;
-
+    // is full or
+    private boolean[][] fullOrNot;
     // size of n
     private int sizeOfN;
-
     // Number of open sites
-
     private  int countOpenSites;
+    // those in the top row and open
+    private int[] topOpen;
+    // bottom and open
+    private int[] bottomOpen;
 
-//    private
 
 
     // creates n-by-n grid, with all sites initially blocked
@@ -32,10 +32,19 @@ public class Percolation {
             sizeOfN = n;
             sites = new int[sizeOfN][sizeOfN];
             openOrBlocked = new boolean[sizeOfN][sizeOfN];
+            fullOrNot = new boolean[sizeOfN][sizeOfN];
+            int siteValue = 0;
             for (int i = 0; i < sizeOfN; i++) {
                 for (int j = 0; j < sizeOfN; j++) {
-                    sites[i][j] = i + j;
+                    sites[i][j] = siteValue;
                     openOrBlocked[i][j] = false;
+                    if(i == 0){
+                        fullOrNot[i][j] = true;
+                    }
+                    else {
+                        fullOrNot[i][j] = false;
+                    }
+                    siteValue += 1;
                 }
             }
         }
@@ -44,13 +53,13 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     // It will also connect to any neighbour site that is already open
-
-
-
     public void open(int row, int col){
 
         if(row <= 0 || col <= 0){
-            throw new IllegalArgumentException("Row and column must be grater than 0");
+            throw new IllegalArgumentException("Row and column must be greater than 0");
+        }
+        else if(row > sizeOfN || col > sizeOfN){
+            throw new IllegalArgumentException("Row and column must be less than the size of N");
         }
         else {
             row = row - 1;
@@ -58,8 +67,6 @@ public class Percolation {
 
             // check if the selected site resides on the side of the grid
             int[][] neighbours;
-
-
             /*
                 open from the top row, has 2 rows if the sites are in the corner and 3 neighbours if the
                 the site is not a corner
@@ -69,9 +76,7 @@ public class Percolation {
                 // The first corner at sites[0][0]
 
                 if(col == 0){
-
                     // It has always 2 neighbours
-
                     neighbours = new int[2][2];
 
                     // The right side neighbour
@@ -141,7 +146,6 @@ public class Percolation {
 
                 // all other rows from the bottom row. The always have 3 neighbours
                 else {
-
                     neighbours = new int[3][2];
 
                     // the top neighbour
@@ -163,44 +167,66 @@ public class Percolation {
 
                 neighbours = new int[3][2];
 
-                // the first neighbour
-                neighbours[0][0] = row;
-                neighbours[0][1] = col + 1;
-                // the second neighbour
-                neighbours[1][0] = row -1;
-                neighbours[1][1] = col;
-                // the third neighbour
+                // the top neighbour
+                neighbours[0][0] = row - 1;
+                neighbours[0][1] = col;
+                // the right side neighbour
+                neighbours[1][0] = row;
+                neighbours[1][1] = col + 1;
+                // the bottom neighbour
                 neighbours[2][0] = row + 1;
                 neighbours[2][1] = col;
 
-
             }
 
-            // open from the right side sites
+            // open from the right side sites, except the corner ones(addressed above). They always have 3 neighbours
             else if(col == sizeOfN -1){
                 neighbours = new int[3][2];
 
-                // the first neighbour
-
+                // the top neighbour
                 neighbours[0][0] = row - 1;
                 neighbours[0][1] = col;
-
-                // the second neighbour
+                // the bottom neighbour
                 neighbours[1][0] = row + 1;
                 neighbours[1][1] = col;
-
-                // the third neighbour
+                // the left side neighbour
                 neighbours[2][0] = row;
                 neighbours[2][1] = col - 1;
             }
-
-            // open from any other internal sites they have 4 each have four neighbours
+            // open from any other internal sites, each has always four neighbours
 
             else {
+                neighbours = new int[4][2];
+
+                // the top neighbour
+                neighbours[0][0] = row -1;
+                neighbours[0][1] = col;
+                // the bottom neighbour
+                neighbours[1][0] = row + 1;
+                neighbours[1][1] = col;
+                // the left side neighbour
+                neighbours[2][0] = row;
+                neighbours[2][1] = col - 1;
+                // the right side neighbour
+                neighbours[3][0] = row;
+                neighbours[3][1] = col + 1;
 
             }
+            // Set the open blocked flag of the entry true
+            openOrBlocked[row][col] = true;
+            countOpenSites += 1;
 
+            // to check whether a neighbour is open or closed, if open, connected or not and to union if it is 
+            // open but yet not unioned together. loops maximum of constant 4
 
+            for (int i = 0; i < neighbours.length; i++) {
+                int currentSite = sites[row][col];
+             if(isOpen(neighbours[i][0], neighbours[i][1])){
+                 if (!weightedUF.connected(currentSite, sites[neighbours[i][0]][neighbours[i][1]])) {
+                     weightedUF.union(currentSite, sites[neighbours[i][0]][neighbours[i][1]]);
+                 }
+             }
+            }
         }
 
     }
@@ -232,6 +258,6 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String[] args){
-
     }
+
 }
