@@ -1,6 +1,8 @@
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+import javax.sound.midi.Soundbank;
+
 
 public class Percolation {
     // Weighted quick union find
@@ -161,8 +163,10 @@ public class Percolation {
                     neighbours[2][1] = col + 1;
 
                 }
-
+                bottomOpen[bottomOpenCount][0] = row;
+                bottomOpen[bottomOpenCount][1] = col;
                 bottomOpenCount += 1;
+
             }
 
             // open from the left side except the corner sites (already addressed above) they always have 3 neighbors
@@ -222,13 +226,12 @@ public class Percolation {
 
             // to check whether a neighbour is open or closed, if open, connected or not and to union if it is 
             // open but yet not unioned together. loops maximum of constant 4
-
+            System.out.println(row+ ", "+col+" has "+neighbours.length+" neighbours ");
             for (int i = 0; i < neighbours.length; i++) {
                 int currentSite = sites[row][col];
-             if(isOpen(neighbours[i][0] + 1, neighbours[i][1] + 1)){
-                 if (!weightedUF.connected(currentSite, sites[neighbours[i][0]][neighbours[i][1]])) {
+             if(isOpen(neighbours[i][0] + 1, neighbours[i][1] + 1) && !weightedUF.connected(currentSite, sites[neighbours[i][0]][neighbours[i][1]])){
                      weightedUF.union(currentSite, sites[neighbours[i][0]][neighbours[i][1]]);
-                 }
+
              }
             }
         }
@@ -244,6 +247,7 @@ public class Percolation {
             throw new IllegalArgumentException("Row and coulumn size must be less than N");
         }
         else {
+//            System.out.println("checking "+row+", "+col+" "+openOrBlocked[row - 1][col -1 ]);
             return  openOrBlocked[row - 1][col - 1];
         }
     }
@@ -280,8 +284,11 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates(){
+        System.out.println("Top open "+topOpenCount);
+        System.out.println("Bottom open "+bottomOpenCount);
         boolean doesPercolate = false;
         for (int i = 0; i < bottomOpenCount; i++) {
+//            System.out.println(i+1+". ["+bottomOpen[i][0]+"]["+bottomOpen[i][0]+"]");
             if(isFull(bottomOpen[i][0] + 1, bottomOpen[i][1] + 1)){
                 doesPercolate = true;
                 break;
@@ -293,26 +300,21 @@ public class Percolation {
     // test client (optional)
     public static void main(String[] args){
 
-//        Percolation percolation = new Percolation(20);
+//        Percolation percolation = new Percolation(4);
 //
-//        for (int i = 1; i <= 10; i++) {
-//                percolation.open(i, 2);
-//        }
-//        percolation.open(5, 20);
-//        System.out.println("Done with opening");
-//        System.out.println("is full 5, 2 "+percolation.isFull(5, 20));
-////        System.out.println("is full 5, 3");
+////        System.out.println("Does percolate "+percolation.percolates());
+//        percolation.open(1, 1);
+//        percolation.open(2,1);
+//        percolation.open(3,2);
+//        percolation.open(3,1);
+//        percolation.open(3,3);
+//        percolation.open(4,3);
+//        percolation.open(4,4);
+////        percolation.open(4,3);
+////        System.out.println("Is full 2, 2 "+percolation.isFull(2, 2));
+//        System.out.println("Is full 4, 4"+ percolation.isFull(4, 4));
 //        System.out.println("Number of open sites "+percolation.numberOfOpenSites());
 //        System.out.println("Does percolate "+percolation.percolates());
-
-        while (true){
-            int randNum = StdRandom.uniform(1, 4);
-            System.out.println("The random "+randNum);
-
-            if(randNum == 4){
-                break;
-            }
-        }
 
     }
 

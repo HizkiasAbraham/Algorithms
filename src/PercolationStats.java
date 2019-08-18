@@ -13,13 +13,13 @@ public class PercolationStats {
         for (int i = 0; i < trials; i++) {
             percolation = new Percolation(n);
             while (!percolation.percolates()){
-                int row = StdRandom.uniform(1, n);
-                int col = StdRandom.uniform(1, n);
+                int row = StdRandom.uniform(1, n+1);
+                int col = StdRandom.uniform(1, n+1);
                 percolation.open(row, col);
                 System.out.println("Opening ["+row+"]"+"["+col+"]");
             }
             thresholds[i] = percolation.numberOfOpenSites();
-            System.out.println("Percolated");
+            System.out.println("Percolated "+percolation.numberOfOpenSites());
         }
     }
 
