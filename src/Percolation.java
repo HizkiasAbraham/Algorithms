@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 
@@ -8,8 +9,6 @@ public class Percolation {
     private int[][] sites;
     // open or closed site track
     private boolean[][] openOrBlocked;
-    // is full or
-    private boolean[][] fullOrNot;
     // size of n
     private int sizeOfN;
     // Number of open sites
@@ -17,7 +16,11 @@ public class Percolation {
     // those in the top row and open
     private int[] topOpen;
     // bottom and open
-    private int[] bottomOpen;
+    private int[][] bottomOpen;
+    // actual top open count
+    private int topOpenCount = 0;
+    // actual bottom open count
+    private int bottomOpenCount = 0;
 
 
 
@@ -32,18 +35,13 @@ public class Percolation {
             sizeOfN = n;
             sites = new int[sizeOfN][sizeOfN];
             openOrBlocked = new boolean[sizeOfN][sizeOfN];
-            fullOrNot = new boolean[sizeOfN][sizeOfN];
+            topOpen = new int[sizeOfN];
+            bottomOpen = new int[sizeOfN][2];
             int siteValue = 0;
             for (int i = 0; i < sizeOfN; i++) {
                 for (int j = 0; j < sizeOfN; j++) {
                     sites[i][j] = siteValue;
                     openOrBlocked[i][j] = false;
-                    if(i == 0){
-                        fullOrNot[i][j] = true;
-                    }
-                    else {
-                        fullOrNot[i][j] = false;
-                    }
                     siteValue += 1;
                 }
             }
@@ -85,6 +83,7 @@ public class Percolation {
                     // The bottom neighbour
                     neighbours[1][0] = row + 1;
                     neighbours[1][1] = col;
+
                 }
 
                 // the second corner at [0][sizeOfN - 1], it has always 2 neighbours
@@ -115,6 +114,9 @@ public class Percolation {
                     neighbours[2][0] = row + 1;
                     neighbours[2][1] = col;
                 }
+
+                topOpenCount += 1;
+
             }
 
             // open from the bottom row
@@ -159,6 +161,8 @@ public class Percolation {
                     neighbours[2][1] = col + 1;
 
                 }
+
+                bottomOpenCount += 1;
             }
 
             // open from the left side except the corner sites (already addressed above) they always have 3 neighbors
@@ -221,7 +225,7 @@ public class Percolation {
 
             for (int i = 0; i < neighbours.length; i++) {
                 int currentSite = sites[row][col];
-             if(isOpen(neighbours[i][0], neighbours[i][1])){
+             if(isOpen(neighbours[i][0] + 1, neighbours[i][1] + 1)){
                  if (!weightedUF.connected(currentSite, sites[neighbours[i][0]][neighbours[i][1]])) {
                      weightedUF.union(currentSite, sites[neighbours[i][0]][neighbours[i][1]]);
                  }
@@ -236,6 +240,9 @@ public class Percolation {
         if(row <= 0 || col <= 0){
             throw new IllegalArgumentException("Row and column must be grater than 0");
         }
+        else if(row > sizeOfN || col > sizeOfN){
+            throw new IllegalArgumentException("Row and coulumn size must be less than N");
+        }
         else {
             return  openOrBlocked[row - 1][col - 1];
         }
@@ -243,7 +250,27 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col){
-        return true;
+        boolean full = false;
+        if(row <= 0 || col <= 0){
+            throw new IllegalArgumentException("Row or column value must be greater than 0");
+        }
+
+        else if(row > sizeOfN || col > sizeOfN){
+            throw new IllegalArgumentException("Row or column value must be less than N");
+        }
+
+        else {
+            row =  row - 1;
+            col = col - 1;
+            for (int i = 0; i < topOpenCount; i++) {
+                if(weightedUF.connected(topOpen[i], sites[row][col])){
+                    full = true;
+                    break;
+                }
+            }
+        }
+
+        return full;
     }
 
     // returns the number of open sites
@@ -253,11 +280,40 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates(){
-        return  true;
+        boolean doesPercolate = false;
+        for (int i = 0; i < bottomOpenCount; i++) {
+            if(isFull(bottomOpen[i][0] + 1, bottomOpen[i][1] + 1)){
+                doesPercolate = true;
+                break;
+            }
+        }
+        return  doesPercolate;
     }
 
     // test client (optional)
     public static void main(String[] args){
+
+//        Percolation percolation = new Percolation(20);
+//
+//        for (int i = 1; i <= 10; i++) {
+//                percolation.open(i, 2);
+//        }
+//        percolation.open(5, 20);
+//        System.out.println("Done with opening");
+//        System.out.println("is full 5, 2 "+percolation.isFull(5, 20));
+////        System.out.println("is full 5, 3");
+//        System.out.println("Number of open sites "+percolation.numberOfOpenSites());
+//        System.out.println("Does percolate "+percolation.percolates());
+
+        while (true){
+            int randNum = StdRandom.uniform(1, 4);
+            System.out.println("The random "+randNum);
+
+            if(randNum == 4){
+                break;
+            }
+        }
+
     }
 
 }

@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a03bf28-630d-4137-b12d-330ea8cc904f" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/PercolationStats.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Algorithms/Percolation.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Algorithms/Percolation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Algorithms/PercolationStats.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Algorithms/PercolationStats.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Percolation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Percolation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PercolationStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PercolationStats.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -58,7 +60,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.PercolationStats">
+  <component name="RunManager" selected="Application.Percolation">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -114,8 +116,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.PercolationStats" />
         <item itemvalue="Application.Percolation" />
+        <item itemvalue="Application.PercolationStats" />
       </list>
     </recent_temporary>
   </component>
