@@ -15,15 +15,10 @@ public class Percolation {
     private int sizeOfN;
     // Number of open sites
     private  int countOpenSites;
-    // those in the top row and open
-    private int[] topOpen;
-    // bottom and open
-    private int[][] bottomOpen;
-    // actual top open count
-    private int topOpenCount = 0;
-    // actual bottom open count
-    private int bottomOpenCount = 0;
-
+    // top virtual site
+    private int topVirtualSite;
+    // bottom virtual site
+    private  int bottomVirtualSite;
 
 
     // creates n-by-n grid, with all sites initially blocked
@@ -33,12 +28,12 @@ public class Percolation {
             throw  new IllegalArgumentException("N must be greater than 0");
         }
         else {
-            weightedUF = new WeightedQuickUnionUF(n*n);
+            weightedUF = new WeightedQuickUnionUF(n*n + 2);
+            topVirtualSite = n*n;
+            bottomVirtualSite = n*n +1;
             sizeOfN = n;
             sites = new int[sizeOfN][sizeOfN];
             openOrBlocked = new boolean[sizeOfN][sizeOfN];
-            topOpen = new int[sizeOfN];
-            bottomOpen = new int[sizeOfN][2];
             int siteValue = 0;
             for (int i = 0; i < sizeOfN; i++) {
                 for (int j = 0; j < sizeOfN; j++) {
@@ -117,7 +112,7 @@ public class Percolation {
                     neighbours[2][1] = col;
                 }
 
-                topOpenCount += 1;
+                weightedUF.union(sites[row][col], topVirtualSite);
 
             }
 
@@ -163,9 +158,8 @@ public class Percolation {
                     neighbours[2][1] = col + 1;
 
                 }
-                bottomOpen[bottomOpenCount][0] = row;
-                bottomOpen[bottomOpenCount][1] = col;
-                bottomOpenCount += 1;
+
+                weightedUF.union(sites[row][col], bottomVirtualSite);
 
             }
 
@@ -226,7 +220,7 @@ public class Percolation {
 
             // to check whether a neighbour is open or closed, if open, connected or not and to union if it is 
             // open but yet not unioned together. loops maximum of constant 4
-            System.out.println(row+ ", "+col+" has "+neighbours.length+" neighbours ");
+//            System.out.println(row+ ", "+col+" has "+neighbours.length+" neighbours ");
             for (int i = 0; i < neighbours.length; i++) {
                 int currentSite = sites[row][col];
              if(isOpen(neighbours[i][0] + 1, neighbours[i][1] + 1) && !weightedUF.connected(currentSite, sites[neighbours[i][0]][neighbours[i][1]])){
@@ -254,27 +248,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col){
-        boolean full = false;
-        if(row <= 0 || col <= 0){
-            throw new IllegalArgumentException("Row or column value must be greater than 0");
-        }
-
-        else if(row > sizeOfN || col > sizeOfN){
-            throw new IllegalArgumentException("Row or column value must be less than N");
-        }
-
-        else {
-            row =  row - 1;
-            col = col - 1;
-            for (int i = 0; i < topOpenCount; i++) {
-                if(weightedUF.connected(topOpen[i], sites[row][col])){
-                    full = true;
-                    break;
-                }
-            }
-        }
-
-        return full;
+        return weightedUF.connected(sites[row - 1][col - 1], topVirtualSite);
     }
 
     // returns the number of open sites
@@ -284,17 +258,8 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates(){
-        System.out.println("Top open "+topOpenCount);
-        System.out.println("Bottom open "+bottomOpenCount);
-        boolean doesPercolate = false;
-        for (int i = 0; i < bottomOpenCount; i++) {
-//            System.out.println(i+1+". ["+bottomOpen[i][0]+"]["+bottomOpen[i][0]+"]");
-            if(isFull(bottomOpen[i][0] + 1, bottomOpen[i][1] + 1)){
-                doesPercolate = true;
-                break;
-            }
-        }
-        return  doesPercolate;
+
+        return  weightedUF.connected(topVirtualSite, bottomVirtualSite);
     }
 
     // test client (optional)

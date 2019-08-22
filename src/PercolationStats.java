@@ -55,7 +55,7 @@ public class PercolationStats {
 
     // test client (see below)
     public static void main(String[] args){
-        PercolationStats pstat = new PercolationStats(4, 5);
+        PercolationStats pstat = new PercolationStats(200, 100);
         System.out.println("Mean "+pstat.mean());
     }
 
