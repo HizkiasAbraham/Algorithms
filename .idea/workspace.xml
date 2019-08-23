@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a03bf28-630d-4137-b12d-330ea8cc904f" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Algorithms/Percolation.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Algorithms/Percolation.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Algorithms/PercolationStats.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Algorithms/PercolationStats.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Percolation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Percolation.java" afterDir="false" />
